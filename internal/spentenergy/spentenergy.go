@@ -14,8 +14,8 @@ const (
 
 func Distance(steps int, height float64) float64 {
 	stepLength := height * stepLengthCoefficient
-	distanceMeters := float64(steps) * stepLength
-	return distanceMeters / mInKm
+	distanceM := float64(steps) * stepLength
+	return distanceM / mInKm
 }
 
 func MeanSpeed(steps int, height float64, duration time.Duration) float64 {
@@ -34,11 +34,9 @@ func RunningSpentCalories(steps int, weight, height float64, duration time.Durat
 	if steps <= 0 || weight <= 0 || height <= 0 || duration <= 0 {
 		return 0, errors.New("некорректные параметры")
 	}
-
 	meanSpeed := MeanSpeed(steps, height, duration)
-	durationInMinutes := duration.Minutes()
-
-	calories := (weight * meanSpeed * durationInMinutes) / minInH
+	durationMin := duration.Minutes()
+	calories := (weight * meanSpeed * durationMin) / minInH
 	return calories, nil
 }
 
@@ -46,11 +44,9 @@ func WalkingSpentCalories(steps int, weight, height float64, duration time.Durat
 	if steps <= 0 || weight <= 0 || height <= 0 || duration <= 0 {
 		return 0, errors.New("некорректные параметры")
 	}
-
 	meanSpeed := MeanSpeed(steps, height, duration)
-	durationInMinutes := duration.Minutes()
-
-	calories := (weight * meanSpeed * durationInMinutes) / minInH
+	durationMin := duration.Minutes()
+	calories := (weight * meanSpeed * durationMin) / minInH
 	calories *= walkingCaloriesCoefficient
 	return calories, nil
 }
