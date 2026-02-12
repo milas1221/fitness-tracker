@@ -27,11 +27,17 @@ func (ds *DaySteps) Parse(datastring string) error {
 	if err != nil {
 		return err
 	}
+	if steps <= 0 {
+		return errors.New("steps must be greater than zero")
+	}
 	ds.Steps = steps
 
 	duration, err := time.ParseDuration(strings.TrimSpace(parts[1]))
 	if err != nil {
 		return err
+	}
+	if duration <= 0 {
+		return errors.New("duration must be greater than zero")
 	}
 	ds.Duration = duration
 

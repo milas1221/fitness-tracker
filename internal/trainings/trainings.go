@@ -28,6 +28,9 @@ func (t *Training) Parse(datastring string) error {
 	if err != nil {
 		return err
 	}
+	if steps <= 0 {
+		return errors.New("steps must be greater than zero")
+	}
 	t.Steps = steps
 
 	t.TrainingType = strings.TrimSpace(parts[1])
@@ -35,6 +38,9 @@ func (t *Training) Parse(datastring string) error {
 	duration, err := time.ParseDuration(strings.TrimSpace(parts[2]))
 	if err != nil {
 		return err
+	}
+	if duration <= 0 {
+		return errors.New("duration must be greater than zero")
 	}
 	t.Duration = duration
 
