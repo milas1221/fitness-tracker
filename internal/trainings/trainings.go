@@ -11,6 +11,7 @@ import (
 	"github.com/Yandex-Practicum/tracker/internal/spentenergy"
 )
 
+
 type Training struct {
 	Steps        int
 	TrainingType string
@@ -18,28 +19,30 @@ type Training struct {
 	personaldata.Personal
 }
 
+
 func (t *Training) Parse(datastring string) error {
-	data := strings.Split(datastring, ",")
-	if len(data) != 3 {
-		return errors.New("некорректный формат строки")
+	parts := strings.Split(datastring, ",")
+	if len(parts) != 3 {
+		return errors.New("неверный формат строки: должно быть три поля")
 	}
 
-	steps, err := strconv.Atoi(data[0])
-	if err != nil || steps <= 0 {
-		return errors.New("некорректное количество шагов")
+	steps, err := strconv.Atoi(strings.TrimSpace(parts[0]))
+	if err != nil {
+		return fmt.Errorf("ошибка преобразования шагов: %w", err)
 	}
-
-	duration, err := time.ParseDuration(data[2])
-	if err != nil || duration <= 0 {
-		return errors.New("некорректная продолжительность")
-	}
-
 	t.Steps = steps
-	t.TrainingType = data[1]
+
+	t.TrainingType = strings.TrimSpace(parts[1])
+
+	duration, err := time.ParseDuration(strings.TrimSpace(parts[2]))
+	if err != nil {
+		return fmt.Errorf("ошибка преобразования длительности: %w", err)
+	}
 	t.Duration = duration
 
 	return nil
 }
+
 
 func (t Training) ActionInfo() (string, error) {
 	distance := spentenergy.Distance(t.Steps, t.Height)
@@ -50,13 +53,9 @@ func (t Training) ActionInfo() (string, error) {
 
 	switch t.TrainingType {
 	case "Бег":
-		calories, err = spentenergy.RunningSpentCalories(
-			t.Steps, t.Weight, t.Height, t.Duration,
-		)
+		calories, err = spentenergy.RunningSpentCalories(t.Steps, t.Weight, t.Height, t.Duration)
 	case "Ходьба":
-		calories, err = spentenergy.WalkingSpentCalories(
-			t.Steps, t.Weight, t.Height, t.Duration,
-		)
+		calories, err = spentenergy.WalkingSpentCalories(t.Steps, t.Weight, t.Height, t.Duration)
 	default:
 		return "", errors.New("неизвестный тип тренировки")
 	}
@@ -65,18 +64,11 @@ func (t Training) ActionInfo() (string, error) {
 		return "", err
 	}
 
-	result := fmt.Sprintf(
-		"Тип тренировки: %s\n"+
-			"Длительность: %.2f ч.\n"+
-			"Дистанция: %.2f км.\n"+
-			"Скорость: %.2f км/ч\n"+
-			"Сожгли калорий: %.2f",
-		t.TrainingType,
-		t.Duration.Hours(),
-		distance,
-		speed,
-		calories,
-	)
+	info := fmt.Sprintf("Тип тренировки: %s\n", t.TrainingType)
+	info += fmt.Sprintf("Длительность: %.2f ч.\n", t.Duration.Hours())
+	info += fmt.Sprintf("Дистанция: %.2f км.\n", distance)
+	info += fmt.Sprintf("Скорость: %.2f км/ч\n", speed)
+	info += fmt.Sprintf("Сожгли калорий: %.2f", calories)
 
-	return result, nil
+	return info, nil
 }
