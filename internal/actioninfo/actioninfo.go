@@ -1,26 +1,25 @@
 package actioninfo
 
-import (
-	"fmt"
-)
+import "log"
 
 type DataParser interface {
-	Parse(datastring string) error
+	Parse(string) error
 	ActionInfo() (string, error)
 }
 
 func Info(dataset []string, dp DataParser) {
 	for _, data := range dataset {
-		err := dp.Parse(data)
-		if err != nil {
-			fmt.Printf("Ошибка парсинга: %v\n", err)
+		if err := dp.Parse(data); err != nil {
+			log.Println(err)
 			continue
 		}
+
 		info, err := dp.ActionInfo()
 		if err != nil {
-			fmt.Printf("Ошибка получения информации: %v\n", err)
+			log.Println(err)
 			continue
 		}
-		fmt.Println(info)
+
+		log.Println(info)
 	}
 }
