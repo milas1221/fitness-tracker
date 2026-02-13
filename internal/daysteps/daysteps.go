@@ -24,13 +24,13 @@ func (ds *DaySteps) Parse(datastring string) error {
 	}
 
 	steps, err := strconv.Atoi(data[0])
-	if err != nil {
-		return err
+	if err != nil || steps <= 0 {
+		return errors.New("некорректное количество шагов")
 	}
 
 	duration, err := time.ParseDuration(data[1])
-	if err != nil {
-		return err
+	if err != nil || duration <= 0 {
+		return errors.New("некорректная продолжительность")
 	}
 
 	ds.Steps = steps
@@ -38,6 +38,7 @@ func (ds *DaySteps) Parse(datastring string) error {
 
 	return nil
 }
+
 
 func (ds DaySteps) ActionInfo() (string, error) {
 	distance := spentenergy.Distance(ds.Steps, ds.Height)
