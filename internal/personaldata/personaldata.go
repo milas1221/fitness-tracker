@@ -13,4 +13,3 @@ func (p Personal) Print() {
 	fmt.Printf("Вес: %.2f кг.\n", p.Weight)
 	fmt.Printf("Рост: %.2f м.\n", p.Height)
 }
-
