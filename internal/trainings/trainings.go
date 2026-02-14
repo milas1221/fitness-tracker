@@ -53,9 +53,13 @@ func (t Training) ActionInfo() (string, error) {
 
 	switch t.TrainingType {
 	case "Бег":
-		calories, err = spentenergy.RunningSpentCalories(t.Steps, t.Weight, t.Height, t.Duration)
+		calories, err = spentenergy.RunningSpentCalories(
+			t.Steps, t.Weight, t.Height, t.Duration,
+		)
 	case "Ходьба":
-		calories, err = spentenergy.WalkingSpentCalories(t.Steps, t.Weight, t.Height, t.Duration)
+		calories, err = spentenergy.WalkingSpentCalories(
+			t.Steps, t.Weight, t.Height, t.Duration,
+		)
 	default:
 		return "", errors.New("неизвестный тип тренировки")
 	}
@@ -64,11 +68,18 @@ func (t Training) ActionInfo() (string, error) {
 		return "", err
 	}
 
-	info := fmt.Sprintf("Тип тренировки: %s\n", t.TrainingType)
-	info += fmt.Sprintf("Длительность: %.2f ч.\n", t.Duration.Hours())
-	info += fmt.Sprintf("Дистанция: %.2f км.\n", distance)
-	info += fmt.Sprintf("Скорость: %.2f км/ч\n", speed)
-	info += fmt.Sprintf("Сожгли калорий: %.2f", calories)
+	result := fmt.Sprintf(
+		"Тип тренировки: %s\n"+
+			"Длительность: %.2f ч.\n"+
+			"Дистанция: %.2f км.\n"+
+			"Скорость: %.2f км/ч\n"+
+			"Сожгли калорий: %.2f\n",
+		t.TrainingType,
+		t.Duration.Hours(),
+		distance,
+		speed,
+		calories,
+	)
 
-	return info, nil
+	return result, nil
 }
