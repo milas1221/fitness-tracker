@@ -24,17 +24,24 @@ func (t *Training) Parse(datastring string) error {
 		return errors.New("неверный формат строки: должно быть три поля")
 	}
 
-	steps, err := strconv.Atoi(strings.TrimSpace(parts[0]))
+	// Не используем TrimSpace – пробелы должны вызывать ошибку
+	steps, err := strconv.Atoi(parts[0])
 	if err != nil {
 		return fmt.Errorf("ошибка преобразования шагов: %w", err)
 	}
+	if steps <= 0 {
+		return errors.New("шаги должны быть положительным числом")
+	}
 	t.Steps = steps
 
-	t.TrainingType = strings.TrimSpace(parts[1])
+	t.TrainingType = parts[1] // тип тренировки должен быть без пробелов
 
-	duration, err := time.ParseDuration(strings.TrimSpace(parts[2]))
+	duration, err := time.ParseDuration(parts[2])
 	if err != nil {
 		return fmt.Errorf("ошибка преобразования длительности: %w", err)
+	}
+	if duration <= 0 {
+		return errors.New("длительность должна быть положительным значением")
 	}
 	t.Duration = duration
 

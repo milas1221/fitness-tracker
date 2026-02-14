@@ -23,15 +23,22 @@ func (ds *DaySteps) Parse(datastring string) error {
 		return errors.New("неверный формат строки: должно быть два поля")
 	}
 
-	steps, err := strconv.Atoi(strings.TrimSpace(parts[0]))
+	// Не используем TrimSpace – пробелы должны вызывать ошибку
+	steps, err := strconv.Atoi(parts[0])
 	if err != nil {
 		return fmt.Errorf("ошибка преобразования шагов: %w", err)
 	}
+	if steps <= 0 {
+		return errors.New("шаги должны быть положительным числом")
+	}
 	ds.Steps = steps
 
-	duration, err := time.ParseDuration(strings.TrimSpace(parts[1]))
+	duration, err := time.ParseDuration(parts[1])
 	if err != nil {
 		return fmt.Errorf("ошибка преобразования длительности: %w", err)
+	}
+	if duration <= 0 {
+		return errors.New("длительность должна быть положительным значением")
 	}
 	ds.Duration = duration
 
