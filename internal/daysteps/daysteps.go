@@ -11,13 +11,11 @@ import (
 	"github.com/Yandex-Practicum/tracker/internal/spentenergy"
 )
 
-
 type DaySteps struct {
 	Steps    int
 	Duration time.Duration
 	personaldata.Personal
 }
-
 
 func (ds *DaySteps) Parse(datastring string) error {
 	parts := strings.Split(datastring, ",")
@@ -39,7 +37,6 @@ func (ds *DaySteps) Parse(datastring string) error {
 
 	return nil
 }
-
 
 func (ds DaySteps) ActionInfo() (string, error) {
 	distance := spentenergy.Distance(ds.Steps, ds.Height)

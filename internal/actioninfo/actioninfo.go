@@ -5,12 +5,10 @@ import (
 	"log"
 )
 
-
 type DataParser interface {
 	Parse(string) error
 	ActionInfo() (string, error)
 }
-
 
 func Info(dataset []string, dp DataParser) {
 	for _, data := range dataset {

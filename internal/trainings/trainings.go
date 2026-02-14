@@ -11,14 +11,12 @@ import (
 	"github.com/Yandex-Practicum/tracker/internal/spentenergy"
 )
 
-
 type Training struct {
 	Steps        int
 	TrainingType string
 	Duration     time.Duration
 	personaldata.Personal
 }
-
 
 func (t *Training) Parse(datastring string) error {
 	parts := strings.Split(datastring, ",")
@@ -42,7 +40,6 @@ func (t *Training) Parse(datastring string) error {
 
 	return nil
 }
-
 
 func (t Training) ActionInfo() (string, error) {
 	distance := spentenergy.Distance(t.Steps, t.Height)
